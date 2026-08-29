@@ -6,6 +6,11 @@ const towerSuggestions = [
     'vidit',
     'vama',
     'vyan',
+    'vedanta',
+    'vinayak',
+    'vatsal',
+    'vittal',
+    'vivaan'
 ];
 
 const roomNoInput = document.getElementById('roomNo');
