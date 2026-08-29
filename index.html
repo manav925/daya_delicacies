@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daya's Delicacies - Ukadiche Modak</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700&family=Tiro+Devanagari+Sanskrit&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="ganesha-bg"></div>
+    
+    <div class="container">
+        <div class="header">
+            <div class="shubh-labh">|| श्री गणेशाय नमः ||</div>
+            <div class="title-section">
+                <h1 class="business-name">🌺 Daya's Delicacies 🌺</h1>
+                <p class="tagline">Homemade Ukadiche Modak</p>
+                <p class="festival-tag">✨ Ganesh Chaturthi Special ✨</p>
+            </div>
+        </div>
+
+        <form id="orderForm" class="order-form">
+            <h2 class="form-title">🪔 Order Form 🪔</h2>
+            
+            <div class="form-group">
+                <label for="roomNo">🏠 Room No.</label>
+                <input type="text" id="roomNo" name="roomNo" required placeholder="Enter your room number">
+            </div>
+
+            <div class="form-group">
+                <label for="towerName">🏢 Tower Name</label>
+                <input type="text" id="towerName" name="towerName" required placeholder="Enter your tower name">
+            </div>
+
+            <!-- Matches the ID in script.js perfectly -->
+            <div class="form-group">
+                <label for="noofModaks"> 🥟 No. Of Modaks</label>
+                <input type="number" id="noofModaks" name="noofModaks" min="1" placeholder="Enter quantity">
+            </div>
+
+            <div class="form-group">
+                <label for="personName">😊 Aapka Shubh Naam</label>
+                <input type="text" id="personName" name="personName" required placeholder="Enter your name">
+            </div>
+
+            <div class="form-group">
+                <label for="contactNo">📱 Contact No.</label>
+                <input type="tel" id="contactNo" name="contactNo" required pattern="[0-9]{10}" placeholder="Enter 10-digit mobile number">
+            </div>
+
+            <div class="form-group">
+                <label for="emailId">📧 Email ID (Optional)</label>
+                <input type="email" id="emailId" name="emailId" placeholder="Enter email address">
+            </div>
+
+            <button type="submit" class="submit-btn">🥟 Place Order</button>
+        </form>
+
+        <div class="footer">
+            <p>🙏 गणपति बाप्पा मोरया 🙏</p>
+            <p class="footer-note">For Society Residents Only</p>
+            <p class="footer-credit">Made with ❤️ by Daya</p>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="ganesha-icon">🕉️</span>
+                <h2>Order Received!</h2>
+            </div>
+            <p>गणपती बाप्पा मोरया! 🙏</p>
+            <p>Daya's Delicacies will contact you soon.</p>
+            <div class="modal-footer">
+                <p>🌺 Thank You 🌺</p>
+                <button onclick="closeModal()" class="done-btn">🙏 Done</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
