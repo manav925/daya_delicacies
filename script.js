@@ -16,14 +16,61 @@ const towerSuggestions = [
 const roomNoInput = document.getElementById('roomNo');
 const towerNameInput = document.getElementById('towerName');
 const modakInput = document.getElementById('noofModaks');
+const modakPriceInput = document.getElementById('modakPrice');
+const contactNoInput = document.getElementById('contactNo');
+const emailInput = document.getElementById('emailId');
+const personNameInput = document.getElementById('personName');
 const towerSuggestionsList = document.getElementById('towerSuggestions');
+
+const MODAK_PRICE_PER_UNIT = 35;
 
 function validateRoomNumber(value) {
     return /^\d{4}$/.test(value.trim());
 }
 
+function validateContactNumber(value) {
+    return /^\d{10}$/.test(value.trim());
+}
+
+function validateEmail(value) {
+    if (!value.trim()) return true;
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
+}
+
+function validateMaxLength(value, maxLength) {
+    return value.trim().length <= maxLength;
+}
+
+function updateTotalPrice() {
+    const quantity = Number(modakInput.value) || 0;
+    const total = quantity * MODAK_PRICE_PER_UNIT;
+    modakPriceInput.value = 'Rs. ' + total;
+}
+
 roomNoInput.addEventListener('input', function () {
     this.value = this.value.replace(/\D/g, '').slice(0, 4);
+});
+
+contactNoInput.addEventListener('input', function () {
+    this.value = this.value.replace(/\D/g, '').slice(0, 10);
+});
+
+modakInput.addEventListener('input', function () {
+    this.value = this.value.replace(/\D/g, '').slice(0, 3);
+    updateTotalPrice();
+});
+
+personNameInput.addEventListener('input', function () {
+    this.value = this.value.slice(0, 50);
+});
+
+emailInput.addEventListener('input', function () {
+    this.value = this.value.slice(0, 50);
+});
+
+towerNameInput.addEventListener('input', function () {
+    this.value = this.value.slice(0, 50);
+    renderTowerSuggestions();
 });
 
 function renderTowerSuggestions() {
@@ -60,7 +107,6 @@ function renderTowerSuggestions() {
     });
 }
 
-towerNameInput.addEventListener('input', renderTowerSuggestions);
 towerNameInput.addEventListener('focus', renderTowerSuggestions);
 
 document.addEventListener('click', function (event) {
@@ -89,13 +135,30 @@ document.getElementById('orderForm').addEventListener('submit', function(e) {
         return;
     }
 
+    if (!validateContactNumber(contactNoInput.value)) {
+        alert('Contact number must be exactly 10 digits without country code.');
+        contactNoInput.focus();
+        return;
+    }
+
+    if (!validateEmail(emailInput.value)) {
+        alert('Please enter a valid email address.');
+        emailInput.focus();
+        return;
+    }
+
+    if (!validateMaxLength(personNameInput.value, 50) || !validateMaxLength(towerNameInput.value, 50) || !validateMaxLength(emailInput.value, 50)) {
+        alert('Text fields cannot exceed 50 characters.');
+        return;
+    }
+
     const formData = {
         roomNo: roomNoInput.value,
         towerName: towerNameInput.value,
         noofModaks: modakInput.value,
-        personName: document.getElementById('personName').value,
-        contactNo: document.getElementById('contactNo').value,
-        emailId: document.getElementById('emailId').value
+        personName: personNameInput.value,
+        contactNo: contactNoInput.value,
+        emailId: emailInput.value
     };
 
     fetch(SCRIPT_URL, {
@@ -107,6 +170,7 @@ document.getElementById('orderForm').addEventListener('submit', function(e) {
     .then(() => {
         document.getElementById('successModal').style.display = 'flex';
         document.getElementById('orderForm').reset();
+        modakPriceInput.value = 'Rs. 0';
         towerSuggestionsList.innerHTML = '';
         towerSuggestionsList.classList.remove('show');
     })
