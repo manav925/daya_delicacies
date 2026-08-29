@@ -28,15 +28,15 @@
                 <input type="text" id="roomNo" name="roomNo" required placeholder="Enter your room number">
             </div>
 
-            <div class="form-group">
+            <div class="form-group tower-field">
                 <label for="towerName">🏢 Tower Name</label>
-                <input type="text" id="towerName" name="towerName" required placeholder="Enter your tower name">
+                <input type="text" id="towerName" name="towerName" required placeholder="Enter your tower name" autocomplete="off">
+                <ul id="towerSuggestions" class="suggestion-list" aria-label="Tower suggestions"></ul>
             </div>
 
-            <!-- Matches the ID in script.js perfectly -->
             <div class="form-group">
                 <label for="noofModaks">🧄 No. Of Modaks</label>
-                <input type="number" id="noofModaks" name="noofModaks" min="1" placeholder="Enter quantity">
+                <input type="number" id="noofModaks" name="noofModaks" min="1" step="1" inputmode="numeric" placeholder="Enter quantity">
             </div>
 
             <div class="form-group">

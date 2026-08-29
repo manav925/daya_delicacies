@@ -147,6 +147,42 @@ body {
 
 .form-group {
     margin-bottom: 20px;
+    position: relative;
+}
+
+.tower-field {
+    position: relative;
+}
+
+.suggestion-list {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    background: #fff;
+    border: 2px solid var(--input-border);
+    border-radius: 10px;
+    list-style: none;
+    max-height: 180px;
+    overflow-y: auto;
+    z-index: 20;
+    display: none;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.suggestion-list.show {
+    display: block;
+}
+
+.suggestion-item {
+    padding: 10px 12px;
+    cursor: pointer;
+    color: var(--brown);
+    font-weight: 600;
+}
+
+.suggestion-item:hover {
+    background: #fff3d6;
 }
 
 .form-group label {
@@ -166,6 +202,16 @@ body {
     font-family: 'Baloo 2', cursive;
     background: var(--white);
     transition: all 0.3s ease;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
 }
 
 .form-group input:focus {
