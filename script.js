@@ -1,4 +1,3 @@
-
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby8EcmaZBhhmIEcyPh6zkntmTW_jIr-9WQR16IrMv5kVCAIY19JN0-cUruHYCbfDVs/exec";
 
 const towerSuggestions = [
@@ -161,22 +160,22 @@ document.getElementById('orderForm').addEventListener('submit', function(e) {
         emailId: emailInput.value
     };
 
+    // ⚡ INSTANT RESPONSE: Display success modal and reset form immediately
+    document.getElementById('successModal').style.display = 'flex';
+    document.getElementById('orderForm').reset();
+    modakPriceInput.value = 'Rs. 0';
+    towerSuggestionsList.innerHTML = '';
+    towerSuggestionsList.classList.remove('show');
+
+    // Asynchronously dispatch data to Google Sheet without blocking the UI
     fetch(SCRIPT_URL, {
         method: 'POST',
         mode: 'no-cors',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify(formData)
     })
-    .then(() => {
-        document.getElementById('successModal').style.display = 'flex';
-        document.getElementById('orderForm').reset();
-        modakPriceInput.value = 'Rs. 0';
-        towerSuggestionsList.innerHTML = '';
-        towerSuggestionsList.classList.remove('show');
-    })
     .catch(error => {
-        console.error('Error:', error);
-        alert('Could not send order. Please check your connection.');
+        console.error('Error sending order in background:', error);
     });
 });
 
