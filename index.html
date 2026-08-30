@@ -71,6 +71,22 @@
         </div>
     </div>
 
+    <!-- Order Confirmation Modal -->
+    <div id="confirmationModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="confirmationTitle">
+        <div class="modal-content confirmation-content">
+            <div class="modal-header">
+                <span class="ganesha-icon">🧾</span>
+                <h2 id="confirmationTitle">Confirm Your Order</h2>
+            </div>
+            <p>Please review your details before placing the order.</p>
+            <dl id="orderPreview" class="order-preview"></dl>
+            <div class="modal-actions">
+                <button type="button" onclick="closeConfirmationModal()" class="cancel-btn">Go Back</button>
+                <button type="button" onclick="confirmOrder()" class="done-btn">Confirm Order</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Success Modal -->
     <div id="successModal" class="modal">
         <div class="modal-content">

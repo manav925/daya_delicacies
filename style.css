@@ -310,6 +310,56 @@ input[type="number"] {
     animation: modalIn 0.5s ease;
 }
 
+.confirmation-content {
+    width: min(90%, 430px);
+    max-width: 430px;
+}
+
+.order-preview {
+    margin: 20px 0 0;
+    text-align: left;
+}
+
+.preview-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(139, 69, 19, 0.2);
+}
+
+.preview-row dt {
+    color: var(--brown);
+    font-weight: 700;
+}
+
+.preview-row dd {
+    margin: 0;
+    color: var(--red);
+    font-weight: 600;
+    text-align: right;
+    overflow-wrap: anywhere;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+.cancel-btn {
+    background: var(--white);
+    border: 2px solid var(--red);
+    border-radius: 50px;
+    padding: 10px 24px;
+    color: var(--red);
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Baloo 2', cursive;
+}
+
 @keyframes modalIn {
     from {
         transform: scale(0.5) rotate(180deg);

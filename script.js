@@ -20,8 +20,11 @@ const contactNoInput = document.getElementById('contactNo');
 const emailInput = document.getElementById('emailId');
 const personNameInput = document.getElementById('personName');
 const towerSuggestionsList = document.getElementById('towerSuggestions');
+const confirmationModal = document.getElementById('confirmationModal');
+const orderPreview = document.getElementById('orderPreview');
 
 const MODAK_PRICE_PER_UNIT = 35;
+let pendingOrder = null;
 
 function validateRoomNumber(value) {
     return /^\d{1,4}$/.test(value.trim());
@@ -38,6 +41,18 @@ function validateEmail(value) {
 
 function validateMaxLength(value, maxLength) {
     return value.trim().length <= maxLength;
+}
+
+function escapeHtml(value) {
+    return String(value).replace(/[&<>'"]/g, function (character) {
+        return {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            "'": '&#39;',
+            '"': '&quot;'
+        }[character];
+    });
 }
 
 function updateTotalPrice() {
@@ -151,27 +166,45 @@ document.getElementById('orderForm').addEventListener('submit', function(e) {
         return;
     }
 
-    // 1️⃣ Capture values FIRST before resetting form
     const qty = Number(modakInput.value) || 0;
     const calculatedPrice = "Rs. " + (qty * MODAK_PRICE_PER_UNIT);
 
-    const formData = new URLSearchParams();
-    formData.append('noofModaks', modakInput.value);
-    formData.append('modakPrice', calculatedPrice);
-    formData.append('roomNo', roomNoInput.value);
-    formData.append('towerName', towerNameInput.value);
-    formData.append('personName', personNameInput.value);
-    formData.append('contactNo', contactNoInput.value);
-    formData.append('emailId', emailInput.value);
+    pendingOrder = {
+        noofModaks: modakInput.value,
+        modakPrice: calculatedPrice,
+        roomNo: roomNoInput.value,
+        towerName: towerNameInput.value,
+        personName: personNameInput.value,
+        contactNo: contactNoInput.value,
+        emailId: emailInput.value
+    };
 
-    // 2️⃣ Display modal UI & reset form AFTER capturing values
+    orderPreview.innerHTML = Object.entries({
+        'No. of Modaks': pendingOrder.noofModaks,
+        'Total Price': pendingOrder.modakPrice,
+        'Room No.': pendingOrder.roomNo,
+        'Tower Name': pendingOrder.towerName,
+        'Your Name': pendingOrder.personName,
+        'Contact No.': pendingOrder.contactNo,
+        'Email ID': pendingOrder.emailId || 'Not provided'
+    }).map(function ([label, value]) {
+        return '<div class="preview-row"><dt>' + escapeHtml(label) + '</dt><dd>' + escapeHtml(value) + '</dd></div>';
+    }).join('');
+
+    confirmationModal.style.display = 'flex';
+});
+
+function confirmOrder() {
+    if (!pendingOrder) return;
+
+    const formData = new URLSearchParams(pendingOrder);
+    confirmationModal.style.display = 'none';
     document.getElementById('successModal').style.display = 'flex';
     document.getElementById('orderForm').reset();
     modakPriceInput.value = 'Rs. 0';
     towerSuggestionsList.innerHTML = '';
     towerSuggestionsList.classList.remove('show');
 
-    // 3️⃣ Send values to Apps Script
     fetch(SCRIPT_URL, {
         method: 'POST',
         mode: 'no-cors',
@@ -180,7 +213,14 @@ document.getElementById('orderForm').addEventListener('submit', function(e) {
     .catch(error => {
         console.error('Error sending order in background:', error);
     });
-});
+
+    pendingOrder = null;
+}
+
+function closeConfirmationModal() {
+    confirmationModal.style.display = 'none';
+    pendingOrder = null;
+}
 
 function closeModal() {
     document.getElementById('successModal').style.display = 'none';
