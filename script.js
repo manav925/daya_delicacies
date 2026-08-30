@@ -150,32 +150,32 @@ document.getElementById('orderForm').addEventListener('submit', function(e) {
         alert('Text fields cannot exceed 50 characters.');
         return;
     }
-    // 💰 Calculate final price explicitly before resetting the form
+// Calculate total price explicitly
     const qty = Number(modakInput.value) || 0;
     const calculatedPrice = "Rs. " + (qty * MODAK_PRICE_PER_UNIT);
-    const formData = {
-        roomNo: roomNoInput.value,
-        towerName: towerNameInput.value,
-        noofModaks: modakInput.value,
-        modakPrice: calculatedPrice, // 👈 Total price included here
-        personName: personNameInput.value,
-        contactNo: contactNoInput.value,
-        emailId: emailInput.value
-    };
 
-    // ⚡ INSTANT RESPONSE
+    // Send using URLSearchParams instead of JSON
+    const formData = new URLSearchParams();
+    formData.append('roomNo', roomNoInput.value);
+    formData.append('towerName', towerNameInput.value);
+    formData.append('noofModaks', modakInput.value);
+    formData.append('modakPrice', calculatedPrice);
+    formData.append('personName', personNameInput.value);
+    formData.append('contactNo', contactNoInput.value);
+    formData.append('emailId', emailInput.value);
+
+    // Show instant success UI
     document.getElementById('successModal').style.display = 'flex';
     document.getElementById('orderForm').reset();
     modakPriceInput.value = 'Rs. 0';
     towerSuggestionsList.innerHTML = '';
     towerSuggestionsList.classList.remove('show');
 
-    // Send data to Google Apps Script
+    // Send payload directly as form-encoded data
     fetch(SCRIPT_URL, {
         method: 'POST',
         mode: 'no-cors',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(formData)
+        body: formData
     })
     .catch(error => {
         console.error('Error sending order in background:', error);
