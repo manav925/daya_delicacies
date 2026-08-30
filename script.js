@@ -155,19 +155,20 @@ document.getElementById('orderForm').addEventListener('submit', function(e) {
         roomNo: roomNoInput.value,
         towerName: towerNameInput.value,
         noofModaks: modakInput.value,
+        modakPrice: modakPriceInput.value, // 👈 Total price included here
         personName: personNameInput.value,
         contactNo: contactNoInput.value,
         emailId: emailInput.value
     };
 
-    // ⚡ INSTANT RESPONSE: Display success modal and reset form immediately
+    // ⚡ INSTANT RESPONSE
     document.getElementById('successModal').style.display = 'flex';
     document.getElementById('orderForm').reset();
     modakPriceInput.value = 'Rs. 0';
     towerSuggestionsList.innerHTML = '';
     towerSuggestionsList.classList.remove('show');
 
-    // Asynchronously dispatch data to Google Sheet without blocking the UI
+    // Send data to Google Apps Script
     fetch(SCRIPT_URL, {
         method: 'POST',
         mode: 'no-cors',
