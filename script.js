@@ -150,28 +150,28 @@ document.getElementById('orderForm').addEventListener('submit', function(e) {
         alert('Text fields cannot exceed 50 characters.');
         return;
     }
-// Calculate total price explicitly
+
+    // 1️⃣ Capture values FIRST before resetting form
     const qty = Number(modakInput.value) || 0;
     const calculatedPrice = "Rs. " + (qty * MODAK_PRICE_PER_UNIT);
 
-    // Send using URLSearchParams instead of JSON
     const formData = new URLSearchParams();
-    formData.append('roomNo', roomNoInput.value);
-    formData.append('towerName', towerNameInput.value);
     formData.append('noofModaks', modakInput.value);
     formData.append('modakPrice', calculatedPrice);
+    formData.append('roomNo', roomNoInput.value);
+    formData.append('towerName', towerNameInput.value);
     formData.append('personName', personNameInput.value);
     formData.append('contactNo', contactNoInput.value);
     formData.append('emailId', emailInput.value);
 
-    // Show instant success UI
+    // 2️⃣ Display modal UI & reset form AFTER capturing values
     document.getElementById('successModal').style.display = 'flex';
     document.getElementById('orderForm').reset();
     modakPriceInput.value = 'Rs. 0';
     towerSuggestionsList.innerHTML = '';
     towerSuggestionsList.classList.remove('show');
 
-    // Send payload directly as form-encoded data
+    // 3️⃣ Send values to Apps Script
     fetch(SCRIPT_URL, {
         method: 'POST',
         mode: 'no-cors',
