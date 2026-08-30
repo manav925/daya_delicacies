@@ -150,12 +150,14 @@ document.getElementById('orderForm').addEventListener('submit', function(e) {
         alert('Text fields cannot exceed 50 characters.');
         return;
     }
-
+    // 💰 Calculate final price explicitly before resetting the form
+    const qty = Number(modakInput.value) || 0;
+    const calculatedPrice = "Rs. " + (qty * MODAK_PRICE_PER_UNIT);
     const formData = {
         roomNo: roomNoInput.value,
         towerName: towerNameInput.value,
         noofModaks: modakInput.value,
-        modakPrice: modakPriceInput.value, // 👈 Total price included here
+        modakPrice: calculatedPrice, // 👈 Total price included here
         personName: personNameInput.value,
         contactNo: contactNoInput.value,
         emailId: emailInput.value
