@@ -24,7 +24,7 @@ const towerSuggestionsList = document.getElementById('towerSuggestions');
 const MODAK_PRICE_PER_UNIT = 35;
 
 function validateRoomNumber(value) {
-    return /^\d{4}$/.test(value.trim());
+    return /^\d{1,4}$/.test(value.trim());
 }
 
 function validateContactNumber(value) {
@@ -129,7 +129,7 @@ document.getElementById('orderForm').addEventListener('submit', function(e) {
     e.preventDefault();
 
     if (!validateRoomNumber(roomNoInput.value)) {
-        alert('Room number must be exactly 4 numeric digits.');
+        alert('Room number must be between 1 and 4 numeric digits.');
         roomNoInput.focus();
         return;
     }
