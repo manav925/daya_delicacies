@@ -225,3 +225,28 @@ function closeConfirmationModal() {
 function closeModal() {
     document.getElementById('successModal').style.display = 'none';
 }
+
+// ==========================================
+// SECURITY SCRIPT: ADD THIS AT THE VERY END
+// ==========================================
+
+// Disable Right-Click
+document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+});
+
+// Disable common Developer Tools keyboard shortcuts
+document.addEventListener('keydown', function(e) {
+    // Prevent F12
+    if (e.key === 'F12') {
+        e.preventDefault();
+    }
+    // Prevent Ctrl+Shift+I (Inspect) and Ctrl+Shift+J (Console)
+    if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j')) {
+        e.preventDefault();
+    }
+    // Prevent Ctrl+U (View Source)
+    if (e.ctrlKey && (e.key === 'U' || e.key === 'u')) {
+        e.preventDefault();
+    }
+});
