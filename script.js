@@ -197,9 +197,17 @@ document.getElementById('orderForm').addEventListener('submit', function(e) {
 function confirmOrder() {
     if (!pendingOrder) return;
 
+    // Generate random 6-digit Order ID
+    const orderId = String(Math.floor(100000 + Math.random() * 900000));
+    pendingOrder.orderId = orderId;
+
     const formData = new URLSearchParams(pendingOrder);
     confirmationModal.style.display = 'none';
     document.getElementById('successModal').style.display = 'flex';
+    
+    // Display Order ID in the modal
+    document.getElementById('orderIdDisplay').textContent = 'Order ID: ' + orderId;
+    
     document.getElementById('orderForm').reset();
     modakPriceInput.value = 'Rs. 0';
     towerSuggestionsList.innerHTML = '';
