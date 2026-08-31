@@ -14,8 +14,10 @@ const ordersBody = document.getElementById('ordersBody');
 const orderModal = document.getElementById('orderModal');
 const orderPreview = document.getElementById('adminOrderPreview');
 const paymentMode = document.getElementById('paymentMode');
+const paymentDoneButton = document.getElementById('paymentDoneButton');
 
 let orders = [];
+let selectedOrder = null;
 
 function escapeHtml(value) {
     return String(value == null ? '' : value).replace(/[&<>'"]/g, function (character) {
@@ -99,6 +101,7 @@ async function loadOrders() {
 }
 
 function openOrderModal(order) {
+    selectedOrder = order;
     const labels = {
         orderId: 'Order ID', noofModaks: 'No. of Modaks', modakPrice: 'Total Price',
         roomNo: 'Room No.', towerName: 'Tower Name', personName: 'Name',
@@ -109,16 +112,55 @@ function openOrderModal(order) {
     }).map(function (key) {
         return '<div class="preview-row"><dt>' + labels[key] + '</dt><dd>' + escapeHtml(order[key]) + '</dd></div>';
     }).join('');
-    paymentMode.value = order.paymentMode || '';
+    paymentMode.value = '';
+    paymentDoneButton.textContent = 'Close';
+    paymentDoneButton.disabled = false;
     orderModal.style.display = 'flex';
     orderModal.setAttribute('aria-hidden', 'false');
-    document.getElementById('closeOrderModal').focus();
+    paymentDoneButton.focus();
 }
 
 function closeOrderModal() {
     orderModal.style.display = 'none';
     orderModal.setAttribute('aria-hidden', 'true');
+    selectedOrder = null;
 }
+
+paymentMode.addEventListener('change', function () {
+    if (paymentMode.value === 'Cash in hand') {
+        paymentDoneButton.textContent = 'Payment Done';
+        return;
+    }
+    paymentDoneButton.textContent = 'Close';
+});
+
+paymentDoneButton.addEventListener('click', async function () {
+    if (paymentMode.value !== 'Cash in hand') {
+        closeOrderModal();
+        return;
+    }
+    if (!selectedOrder || !selectedOrder.orderId) {
+        return alert('This order has no Order ID, so its payment status cannot be updated.');
+    }
+
+    paymentDoneButton.disabled = true;
+    paymentDoneButton.textContent = 'Saving...';
+    try {
+        const session = getSession();
+        const data = await postToApi({
+            action: 'markPaymentDone',
+            token: session.token,
+            orderId: selectedOrder.orderId
+        });
+        if (!data.success) throw new Error(data.message || 'Unable to update payment status.');
+        closeOrderModal();
+        await loadOrders();
+    } catch (error) {
+        paymentDoneButton.disabled = false;
+        paymentDoneButton.textContent = 'Payment Done';
+        alert(error.message || 'Unable to update payment status.');
+    }
+});
 
 loginForm.addEventListener('submit', async function (event) {
     event.preventDefault();
@@ -144,7 +186,6 @@ ordersBody.addEventListener('click', function (event) {
 });
 
 document.getElementById('logoutButton').addEventListener('click', function () { showLogin(); });
-document.getElementById('closeOrderModal').addEventListener('click', closeOrderModal);
 orderModal.addEventListener('click', function (event) { if (event.target === orderModal) closeOrderModal(); });
 document.addEventListener('keydown', function (event) { if (event.key === 'Escape') closeOrderModal(); });
 

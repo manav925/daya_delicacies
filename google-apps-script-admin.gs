@@ -19,7 +19,7 @@ function jsonResponse_(body) {
 
 function handleAdminPost(e) {
   var action = String((e.parameter || {}).action || '');
-  if (action !== 'adminLogin' && action !== 'getOrders') return null;
+  if (action !== 'adminLogin' && action !== 'getOrders' && action !== 'markPaymentDone') return null;
 
   if (action === 'adminLogin') {
     var username = String(e.parameter.username || '').trim();
@@ -43,7 +43,21 @@ function handleAdminPost(e) {
   }
 
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Sheet1');
-  if (!sheet || sheet.getLastRow() < 2) return jsonResponse_({ success: true, orders: [] });
+  if (!sheet) return jsonResponse_({ success: false, message: 'Sheet1 was not found.' });
+  if (action === 'markPaymentDone') {
+    var orderId = String(e.parameter.orderId || '');
+    if (!orderId) return jsonResponse_({ success: false, message: 'Order ID is required.' });
+    if (sheet.getLastRow() < 2) return jsonResponse_({ success: false, message: 'Order not found.' });
+    var orderIds = sheet.getRange(2, 2, Math.max(sheet.getLastRow() - 1, 1), 1).getDisplayValues();
+    for (var rowIndex = 0; rowIndex < orderIds.length; rowIndex++) {
+      if (orderIds[rowIndex][0] === orderId) {
+        sheet.getRange(rowIndex + 2, 10).setValue('Payment Done');
+        return jsonResponse_({ success: true });
+      }
+    }
+    return jsonResponse_({ success: false, message: 'Order not found.' });
+  }
+  if (sheet.getLastRow() < 2) return jsonResponse_({ success: true, orders: [] });
   var values = sheet.getDataRange().getDisplayValues();
   var headers = values.shift().map(function (header) {
     return String(header).toLowerCase().replace(/[^a-z0-9]/g, '');
