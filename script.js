@@ -137,27 +137,30 @@ document.getElementById('orderForm').addEventListener('submit', function(e) {
 function confirmOrder() {
     if (!pendingOrder) return;
 
-    // Generate random 6-digit Order ID
-    const orderId = String(Math.floor(100000 + Math.random() * 900000));
-    pendingOrder.orderId = orderId;
-
     const formData = new URLSearchParams(pendingOrder);
     confirmationModal.style.display = 'none';
-    document.getElementById('successModal').style.display = 'flex';
-    
-    // Display Order ID in the modal
-    document.getElementById('orderIdDisplay').textContent = 'Order ID: ' + orderId;
-    
-    document.getElementById('orderForm').reset();
-    modakPriceInput.value = 'Rs. 0';
 
     fetch(SCRIPT_URL, {
         method: 'POST',
-        mode: 'no-cors',
-        body: formData
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+        body: formData.toString()
+    })
+    .then(function (response) {
+        if (!response.ok) throw new Error('Unable to place your order.');
+        return response.json();
+    })
+    .then(function (data) {
+        if (!data.success || data.orderId === undefined) {
+            throw new Error(data.message || 'Unable to place your order.');
+        }
+        document.getElementById('orderIdDisplay').textContent = 'Order ID: ' + data.orderId;
+        document.getElementById('successModal').style.display = 'flex';
+        document.getElementById('orderForm').reset();
+        modakPriceInput.value = 'Rs. 0';
     })
     .catch(error => {
-        console.error('Error sending order in background:', error);
+        console.error('Error placing order:', error);
+        alert('Your order could not be placed. Please try again.');
     });
 
     pendingOrder = null;
