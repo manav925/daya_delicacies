@@ -64,6 +64,14 @@
     text-align: left;
 }
 
+.payment-group select:invalid {
+    color: #757575;
+}
+
+.payment-group select option {
+    color: var(--brown);
+}
+
 .sr-only {
     position: absolute;
     width: 1px;

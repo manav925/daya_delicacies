@@ -65,8 +65,8 @@
             <dl id="adminOrderPreview" class="order-preview"></dl>
             <div class="form-group payment-group">
                 <label for="paymentMode">Payment Mode</label>
-                <placeholder id="paymentModePlaceholder" class="payment-placeholder">Select payment mode</placeholder>
-                <select id="paymentMode" name="paymentMode">
+                <select id="paymentMode" name="paymentMode" required>
+                    <option value="" selected disabled hidden>Select payment mode</option>
                     <option value="Cash in hand">Cash in hand</option>
                     <option value="Online Pay">Online Pay</option>
                 </select>
