@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Admin | Daya's Delicacies</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="admin.css">
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700&family=Tiro+Devanagari+Sanskrit&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="ganesha-bg"></div>
+
+    <main class="container admin-container">
+        <header class="header admin-header">
+            <p class="shubh-labh">Daya's Delicacies</p>
+            <h1 class="business-name">Admin Dashboard</h1>
+            <p class="tagline">Order management</p>
+        </header>
+
+        <section id="loginPanel" class="order-form admin-panel" aria-labelledby="loginTitle">
+            <h2 id="loginTitle" class="form-title">Admin Login</h2>
+            <form id="loginForm" novalidate>
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input id="username" name="username" type="text" autocomplete="username" required maxlength="100">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input id="password" name="password" type="password" autocomplete="current-password" required maxlength="200">
+                </div>
+                <p id="loginError" class="admin-error" role="alert" aria-live="polite"></p>
+                <button class="submit-btn" type="submit">Log in</button>
+            </form>
+        </section>
+
+        <section id="ordersPanel" class="order-form admin-panel" hidden aria-labelledby="ordersTitle">
+            <div class="admin-toolbar">
+                <h2 id="ordersTitle" class="form-title">Orders</h2>
+                <button id="logoutButton" class="cancel-btn" type="button">Log out</button>
+            </div>
+            <p id="ordersStatus" class="admin-status" aria-live="polite">Loading orders...</p>
+            <div class="orders-wrap">
+                <table class="orders-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Room No</th>
+                            <th scope="col">Tower</th>
+                            <th scope="col">No. of Modaks</th>
+                            <th scope="col"><span class="sr-only">Actions</span></th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersBody"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <div id="orderModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="orderModalTitle" aria-hidden="true">
+        <div class="modal-content confirmation-content">
+            <div class="modal-header">
+                <h2 id="orderModalTitle">Order Details</h2>
+            </div>
+            <dl id="adminOrderPreview" class="order-preview"></dl>
+            <div class="form-group payment-group">
+                <label for="paymentMode">Payment Mode</label>
+                <select id="paymentMode" name="paymentMode">
+                    <option value="Cash in hand">Cash in hand</option>
+                    <option value="Online Pay">Online Pay</option>
+                </select>
+            </div>
+            <div class="modal-actions">
+                <button id="closeOrderModal" type="button" class="done-btn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>
