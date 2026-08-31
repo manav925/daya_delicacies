@@ -147,12 +147,93 @@ function confirmOrder() {
     })
     .then(function (response) {
         if (!response.ok) throw new Error('Unable to place your order.');
-        return response.json();
+        return response.text();
+    })
+    .then(function (responseText) {
+        try {
+            return JSON.parse(responseText);
+        } catch (_) {
+            throw new Error('Order service returned: ' + responseText);
+        }
     })
     .then(function (data) {
         if (!data.success || data.orderId === undefined) {
             throw new Error(data.message || 'Unable to place your order.');
-        }
+        }function doPost(e) {
+  try {
+    const adminResponse = handleAdminPost_(e);
+    if (adminResponse) return adminResponse;
+
+    if (e.parameter.action) {
+      return jsonResponse_({
+        success: false,
+        message: "Unsupported admin action."
+      });
+    }
+
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Sheet1");
+    const lock = LockService.getScriptLock();
+
+    lock.waitLock(10000);
+
+    try {
+      const timestamp = new Date();
+      const orderId = String(getNextOrderId_());
+      const noofModaks = e.parameter.noofModaks || "0";
+      const modakPrice = e.parameter.modakPrice ||
+        ("Rs. " + (Number(noofModaks) * 35));
+      const roomNo = e.parameter.roomNo || "";
+      const towerName = e.parameter.towerName || "";
+      const personName = e.parameter.personName || "";
+      const contactNo = e.parameter.contactNo || "";
+      const emailId = e.parameter.emailId || "";
+
+      sheet.appendRow([
+        timestamp,
+        orderId,
+        noofModaks,
+        modakPrice,
+        roomNo,
+        towerName,
+        personName,
+        contactNo,
+        emailId,
+        "Pending"
+      ]);
+
+      // Save the next sequence only after the order is written successfully.
+      PropertiesService.getScriptProperties()
+        .setProperty("lastOrderId", orderId);
+
+      const data = {
+        orderId: orderId,
+        noofModaks: noofModaks,
+        modakPrice: modakPrice,
+        roomNo: roomNo,
+        towerName: towerName,
+        personName: personName,
+        contactNo: contactNo,
+        emailId: emailId
+      };
+
+      sendEmailNotification(data, timestamp);
+
+      return jsonResponse_({
+        success: true,
+        orderId: orderId
+      });
+
+    } finally {
+      lock.releaseLock();
+    }
+
+  } catch (error) {
+    return jsonResponse_({
+      success: false,
+      message: error.toString()
+    });
+  }
+}
         document.getElementById('orderIdDisplay').textContent = 'Order ID: ' + data.orderId;
         document.getElementById('successModal').style.display = 'flex';
         document.getElementById('orderForm').reset();
@@ -160,7 +241,7 @@ function confirmOrder() {
     })
     .catch(error => {
         console.error('Error placing order:', error);
-        alert('Your order could not be placed. Please try again.');
+        alert(error.message || 'Your order could not be placed. Please try again.');
     });
 
     pendingOrder = null;
