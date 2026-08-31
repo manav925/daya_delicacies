@@ -70,11 +70,15 @@ function showOrders() {
 
 function renderOrders() {
     ordersBody.innerHTML = orders.map(function (order, index) {
+        const isPaymentDone = String(order.paymentStatus || order.paymentstatus || '').trim().toLowerCase() === 'payment done';
+        const actionButton = isPaymentDone
+            ? '<button class="done-btn view-btn payment-complete-btn" type="button" disabled>Payment Done</button>'
+            : '<button class="done-btn view-btn" type="button" data-order-index="' + index + '">View</button>';
         return '<tr>' +
             '<td>' + escapeHtml(order.roomNo) + '</td>' +
             '<td>' + escapeHtml(order.towerName) + '</td>' +
             '<td>' + escapeHtml(order.noofModaks) + '</td>' +
-            '<td><button class="done-btn view-btn" type="button" data-order-index="' + index + '">View</button></td>' +
+            '<td>' + actionButton + '</td>' +
             '</tr>';
     }).join('');
 }

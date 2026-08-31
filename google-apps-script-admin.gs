@@ -67,7 +67,8 @@ function handleAdminPost(e) {
     modakprice: ['modakprice', 'totalprice'], roomno: ['roomno'],
     towername: ['towername', 'tower'], personname: ['personname', 'name'],
     contactno: ['contactno', 'contactnumber'], emailid: ['emailid', 'email'],
-    timestamp: ['timestamp', 'ordertime'], paymentmode: ['paymentmode']
+    timestamp: ['timestamp', 'ordertime'], paymentmode: ['paymentmode'],
+    paymentstatus: ['paymentstatus']
   };
   var indexFor = function (name) {
     var matches = aliases[name] || [name];
