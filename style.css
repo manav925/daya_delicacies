@@ -603,8 +603,8 @@ body {
 .ganesha-bg {
     opacity: 0.58;
     background-image:
-        radial-gradient(circle, rgba(161, 67, 25, 0.38) 1.25px, transparent 1.8px),
-        radial-gradient(circle, rgba(255, 255, 255, 0.65) 1px, transparent 1.7px);
+        radial-gradient(circle, rgba(218, 157, 0, 0.72) 1.25px, transparent 1.8px),
+        radial-gradient(circle, rgba(255, 224, 101, 0.8) 1px, transparent 1.7px);
     background-size: 26px 26px, 26px 26px;
     background-position: 0 0, 13px 13px;
 }
