@@ -376,6 +376,49 @@ input[type="number"] {
     animation: modalIn 0.5s ease;
 }
 
+.loading-content {
+    width: min(88%, 330px);
+    padding: 36px 28px 30px;
+}
+
+.loading-content h2 {
+    color: var(--red);
+    font-size: 1.35rem;
+    margin: 18px 0 8px;
+}
+
+.loading-spinner {
+    width: 72px;
+    height: 72px;
+    margin: 0 auto;
+    display: grid;
+    place-items: center;
+    border: 5px solid rgba(255, 183, 77, 0.35);
+    border-top-color: var(--red);
+    border-right-color: var(--gold);
+    border-radius: 50%;
+    box-shadow: 0 0 0 6px rgba(255, 215, 0, 0.12);
+    animation: loadingSpin 1s linear infinite;
+}
+
+.loading-spinner span {
+    font-size: 1.7rem;
+    animation: loadingCounterSpin 1s linear infinite;
+}
+
+.done-btn:disabled {
+    cursor: wait;
+    opacity: 0.68;
+}
+
+@keyframes loadingSpin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes loadingCounterSpin {
+    to { transform: rotate(-360deg); }
+}
+
 .confirmation-content {
     width: min(90%, 430px);
     max-width: 430px;

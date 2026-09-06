@@ -9,6 +9,8 @@ const emailInput = document.getElementById('emailId');
 const personNameInput = document.getElementById('personName');
 const confirmationModal = document.getElementById('confirmationModal');
 const orderPreview = document.getElementById('orderPreview');
+const loadingModal = document.getElementById('loadingModal');
+const confirmOrderButton = document.getElementById('confirmOrderBtn');
 
 const MODAK_PRICE_PER_UNIT = 35;
 let pendingOrder = null;
@@ -139,6 +141,8 @@ function confirmOrder() {
 
     const formData = new URLSearchParams(pendingOrder);
     confirmationModal.style.display = 'none';
+    loadingModal.style.display = 'flex';
+    confirmOrderButton.disabled = true;
 
     fetch(SCRIPT_URL, {
         method: 'POST',
@@ -234,12 +238,16 @@ function confirmOrder() {
     });
   }
 }
+        loadingModal.style.display = 'none';
+        confirmOrderButton.disabled = false;
         document.getElementById('orderIdDisplay').textContent = 'Order ID: ' + data.orderId;
         document.getElementById('successModal').style.display = 'flex';
         document.getElementById('orderForm').reset();
         modakPriceInput.value = 'Rs. 0';
     })
     .catch(error => {
+        loadingModal.style.display = 'none';
+        confirmOrderButton.disabled = false;
         console.error('Error placing order:', error);
         alert(error.message || 'Your order could not be placed. Please try again.');
     });

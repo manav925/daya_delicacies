@@ -100,8 +100,17 @@
             <dl id="orderPreview" class="order-preview"></dl>
             <div class="modal-actions">
                 <button type="button" onclick="closeConfirmationModal()" class="cancel-btn">Go Back</button>
-                <button type="button" onclick="confirmOrder()" class="done-btn">Confirm Order</button>
+                <button type="button" id="confirmOrderBtn" onclick="confirmOrder()" class="done-btn">Confirm Order</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Loading Modal -->
+    <div id="loadingModal" class="modal loading-modal" role="status" aria-live="polite" aria-label="Placing your order">
+        <div class="modal-content loading-content">
+            <div class="loading-spinner" aria-hidden="true"><span>🌺</span></div>
+            <h2>Placing your order...</h2>
+            <p>Please wait while we reserve your modaks.</p>
         </div>
     </div>
 
