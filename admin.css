@@ -83,6 +83,43 @@
     color: var(--brown);
 }
 
+.online-payment-panel {
+    margin: 18px auto 0;
+    padding: 18px;
+    text-align: center;
+    border: 1px dashed var(--input-border);
+    border-radius: 16px;
+    background: rgba(255, 248, 225, 0.7);
+}
+
+.qr-heading {
+    margin: 0 0 10px !important;
+    color: var(--red) !important;
+    font-size: 1.1rem;
+}
+
+.payment-qr-code {
+    display: block;
+    width: min(220px, 100%);
+    height: auto;
+    margin: 0 auto;
+    padding: 8px;
+    border-radius: 12px;
+    background: var(--white);
+    box-shadow: 0 5px 15px rgba(78, 52, 46, 0.13);
+}
+
+.online-payment-amount {
+    margin: 11px 0 0 !important;
+    color: var(--brown) !important;
+    font-size: 1.1rem;
+    font-weight: 700 !important;
+}
+
+.online-payment-error {
+    margin: 10px 0 0;
+}
+
 .sr-only {
     position: absolute;
     width: 1px;

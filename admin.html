@@ -72,6 +72,12 @@
                     <option value="Online Pay">Online Pay</option>
                 </select>
             </div>
+            <section id="onlinePaymentPanel" class="online-payment-panel" hidden aria-live="polite">
+                <p class="qr-heading">Scan to pay</p>
+                <img id="paymentQrCode" class="payment-qr-code" alt="UPI payment QR code" width="220" height="220">
+                <p id="onlinePaymentAmount" class="online-payment-amount"></p>
+                <p id="onlinePaymentError" class="admin-error online-payment-error" role="alert"></p>
+            </section>
             <div class="modal-actions">
                 <button id="paymentDoneButton" type="button" class="done-btn" disabled>Close</button>
             </div>

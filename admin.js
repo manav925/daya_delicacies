@@ -4,6 +4,9 @@
  */
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby8EcmaZBhhmIEcyPh6zkntmTW_jIr-9WQR16IrMv5kVCAIY19JN0-cUruHYCbfDVs/exec';
 const SESSION_KEY = 'dayaAdminSession';
+// Add your UPI ID here, for example: name@bank
+const PAYEE_UPI_ID = 'manavmindhe2002-1@okhdfcbank';
+const PAYEE_NAME = "Daya's Delicacies";
 
 const loginPanel = document.getElementById('loginPanel');
 const ordersPanel = document.getElementById('ordersPanel');
@@ -15,6 +18,10 @@ const orderModal = document.getElementById('orderModal');
 const orderPreview = document.getElementById('adminOrderPreview');
 const paymentMode = document.getElementById('paymentMode');
 const paymentDoneButton = document.getElementById('paymentDoneButton');
+const onlinePaymentPanel = document.getElementById('onlinePaymentPanel');
+const paymentQrCode = document.getElementById('paymentQrCode');
+const onlinePaymentAmount = document.getElementById('onlinePaymentAmount');
+const onlinePaymentError = document.getElementById('onlinePaymentError');
 
 let orders = [];
 let selectedOrder = null;
@@ -117,6 +124,7 @@ function openOrderModal(order) {
         return '<div class="preview-row"><dt>' + labels[key] + '</dt><dd>' + escapeHtml(order[key]) + '</dd></div>';
     }).join('');
     paymentMode.value = '';
+    hideOnlinePayment();
     paymentDoneButton.textContent = 'Close';
     paymentDoneButton.disabled = false;
     orderModal.style.display = 'flex';
@@ -128,18 +136,68 @@ function closeOrderModal() {
     orderModal.style.display = 'none';
     orderModal.setAttribute('aria-hidden', 'true');
     selectedOrder = null;
+    hideOnlinePayment();
+}
+
+function amountForUpi(value) {
+    const amount = Number(String(value == null ? '' : value).replace(/[^0-9.]/g, ''));
+    return Number.isFinite(amount) && amount > 0 ? amount.toFixed(2) : '';
+}
+
+function hideOnlinePayment() {
+    onlinePaymentPanel.hidden = true;
+    paymentQrCode.removeAttribute('src');
+    onlinePaymentError.textContent = '';
+}
+
+function showOnlinePayment() {
+    onlinePaymentPanel.hidden = false;
+    onlinePaymentError.textContent = '';
+
+    const amount = amountForUpi(selectedOrder && selectedOrder.modakPrice);
+    if (!PAYEE_UPI_ID.trim()) {
+        paymentQrCode.removeAttribute('src');
+        onlinePaymentAmount.textContent = '';
+        onlinePaymentError.textContent = 'Add your UPI ID to PAYEE_UPI_ID in admin.js to generate the payment QR.';
+        paymentDoneButton.disabled = true;
+        return;
+    }
+    if (!amount) {
+        paymentQrCode.removeAttribute('src');
+        onlinePaymentAmount.textContent = '';
+        onlinePaymentError.textContent = 'This order does not have a valid total price.';
+        paymentDoneButton.disabled = true;
+        return;
+    }
+
+    const note = 'Order ' + String(selectedOrder.orderId || '').slice(0, 40);
+    const upiUrl = 'upi://pay?pa=' + encodeURIComponent(PAYEE_UPI_ID.trim()) +
+        '&pn=' + encodeURIComponent(PAYEE_NAME) +
+        '&am=' + encodeURIComponent(amount) +
+        '&cu=INR&tn=' + encodeURIComponent(note);
+    paymentQrCode.src = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&format=png&data=' + encodeURIComponent(upiUrl);
+    onlinePaymentAmount.textContent = 'Amount: ₹' + amount;
+    paymentDoneButton.disabled = false;
 }
 
 paymentMode.addEventListener('change', function () {
     if (paymentMode.value === 'Cash in hand') {
+        hideOnlinePayment();
         paymentDoneButton.textContent = 'Payment Done';
+        paymentDoneButton.disabled = false;
         return;
     }
+    if (paymentMode.value === 'Online Pay') {
+        paymentDoneButton.textContent = 'Payment Done';
+        showOnlinePayment();
+        return;
+    }
+    hideOnlinePayment();
     paymentDoneButton.textContent = 'Close';
 });
 
 paymentDoneButton.addEventListener('click', async function () {
-    if (paymentMode.value !== 'Cash in hand') {
+    if (paymentMode.value !== 'Cash in hand' && paymentMode.value !== 'Online Pay') {
         closeOrderModal();
         return;
     }
