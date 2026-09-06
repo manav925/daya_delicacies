@@ -597,7 +597,16 @@ body {
         radial-gradient(circle at 8% 8%, rgba(255, 255, 255, 0.82) 0 2px, transparent 3px),
         radial-gradient(circle at 90% 16%, rgba(211, 47, 47, 0.12) 0 1px, transparent 2px),
         linear-gradient(135deg, #fffdf1 0%, var(--bg-cream) 34%, var(--bg-warm) 70%, #ffd28e 100%);
-    background-size: 52px 52px, 70px 70px, auto;
+    background-size: 42px 42px, 58px 58px, auto;
+}
+
+.ganesha-bg {
+    opacity: 0.58;
+    background-image:
+        radial-gradient(circle, rgba(161, 67, 25, 0.38) 1.25px, transparent 1.8px),
+        radial-gradient(circle, rgba(255, 255, 255, 0.65) 1px, transparent 1.7px);
+    background-size: 26px 26px, 26px 26px;
+    background-position: 0 0, 13px 13px;
 }
 
 body::before,
