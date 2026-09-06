@@ -184,8 +184,8 @@ function confirmOrder() {
       const timestamp = new Date();
       const orderId = String(getNextOrderId_());
       const noofModaks = e.parameter.noofModaks || "0";
-      const modakPrice = e.parameter.modakPrice ||
-        ("Rs. " + (Number(noofModaks) * 35));
+      // Store a numeric total in Sheets. The website can continue displaying "Rs." separately.
+      const modakPrice = Number(noofModaks) * 35;
       const roomNo = e.parameter.roomNo || "";
       const towerName = e.parameter.towerName || "";
       const personName = e.parameter.personName || "";

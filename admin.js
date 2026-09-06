@@ -140,7 +140,9 @@ function closeOrderModal() {
 }
 
 function amountForUpi(value) {
-    const amount = Number(String(value == null ? '' : value).replace(/[^0-9.]/g, ''));
+    // Extract the number rather than stripping characters: "Rs. 35" must be 35, not .35.
+    const match = String(value == null ? '' : value).match(/\d[\d,]*(?:\.\d{1,2})?/);
+    const amount = match ? Number(match[0].replace(/,/g, '')) : NaN;
     return Number.isFinite(amount) && amount > 0 ? amount.toFixed(2) : '';
 }
 
