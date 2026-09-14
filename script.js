@@ -167,6 +167,9 @@ function confirmOrder() {
         loadingModal.style.display = 'none';
         confirmOrderButton.disabled = false;
         document.getElementById('orderIdDisplay').textContent = 'Order ID: ' + data.orderId;
+        const towerLabel = towerNameInput.options[towerNameInput.selectedIndex].textContent;
+        document.getElementById('deliveryMessage').textContent =
+            'Order will be delivered from VAMA 402 to ' + towerLabel + ' ' + pendingOrder.roomNo + '.';
         document.getElementById('successModal').style.display = 'flex';
         document.getElementById('orderForm').reset();
         modakPriceInput.value = 'Rs. 0';
