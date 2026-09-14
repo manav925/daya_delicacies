@@ -85,23 +85,18 @@ function handleAdminPost(e) {
 }
 
 function getNextOrderId_(sheet) {
-  var properties = PropertiesService.getScriptProperties();
-  var storedOrderId = properties.getProperty('lastOrderId');
-  var lastOrderId = storedOrderId === null ? NaN : Number(storedOrderId);
-
-  if (Number.isFinite(lastOrderId) && lastOrderId >= 0) {
-    return Math.floor(lastOrderId) + 1;
-  }
-
-  // On the first run, continue from the highest numeric ID already in Sheet1.
+  // Column B is the source of truth. No sequence is stored outside the sheet.
   if (sheet.getLastRow() < 2) return 1;
   var ids = sheet.getRange(2, 2, sheet.getLastRow() - 1, 1).getDisplayValues();
-  var highestOrderId = 0;
-  ids.forEach(function (row) {
-    var id = Number(row[0]);
-    if (Number.isFinite(id) && id > highestOrderId) highestOrderId = Math.floor(id);
-  });
-  return highestOrderId + 1;
+  for (var index = ids.length - 1; index >= 0; index--) {
+    var lastOrderId = Number(ids[index][0]);
+    if (Number.isFinite(lastOrderId) && lastOrderId >= 0) {
+      return Math.floor(lastOrderId) + 1;
+    }
+  }
+
+  // There are no order IDs left in the sheet, so restart the sequence.
+  return 1;
 }
 
 function doPost(e) {
@@ -130,8 +125,6 @@ function doPost(e) {
         e.parameter.emailId || '', 'Pending'
       ]);
 
-      // Persist only after the row was successfully added.
-      PropertiesService.getScriptProperties().setProperty('lastOrderId', orderId);
       return jsonResponse_({ success: true, orderId: orderId });
     } finally {
       lock.releaseLock();
