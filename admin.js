@@ -5,7 +5,7 @@
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby8EcmaZBhhmIEcyPh6zkntmTW_jIr-9WQR16IrMv5kVCAIY19JN0-cUruHYCbfDVs/exec';
 const SESSION_KEY = 'dayaAdminSession';
 // Add your UPI ID here, for example: name@bank
-const PAYEE_UPI_ID = 'manavmindhe2002-1@okhdfcbank';
+const PAYEE_UPI_ID = 'dayamindhe27@okicici';
 const PAYEE_NAME = "Daya's Delicacies";
 
 const loginPanel = document.getElementById('loginPanel');
