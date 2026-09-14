@@ -1,14 +1,7 @@
 /*
- * Add these helpers to the Google Apps Script project behind SCRIPT_URL, then
- * redeploy the web app. Keep the deployment's execute-as setting set to the
- * sheet owner and do not make the spreadsheet itself publicly readable.
- *
- * Integrate handleAdminPost(e) at the beginning of your existing doPost(e)
- * BEFORE the code which adds customer orders and returns "Success":
- *   var adminResponse = handleAdminPost(e);
- *   if (adminResponse) return adminResponse;
- *
- * Do not create a second doPost function. There must be one doPost only.
+ * Deploy this file as the Google Apps Script web app behind SCRIPT_URL.
+ * Keep the deployment's execute-as setting set to the sheet owner and do not
+ * make the spreadsheet itself publicly readable.
  */
 var ADMIN_TOKEN_TTL_SECONDS = 60 * 30;
 
@@ -89,4 +82,61 @@ function handleAdminPost(e) {
       return order;
     }).reverse()
   });
+}
+
+function getNextOrderId_(sheet) {
+  var properties = PropertiesService.getScriptProperties();
+  var storedOrderId = properties.getProperty('lastOrderId');
+  var lastOrderId = storedOrderId === null ? NaN : Number(storedOrderId);
+
+  if (Number.isFinite(lastOrderId) && lastOrderId >= 0) {
+    return Math.floor(lastOrderId) + 1;
+  }
+
+  // On the first run, continue from the highest numeric ID already in Sheet1.
+  if (sheet.getLastRow() < 2) return 1;
+  var ids = sheet.getRange(2, 2, sheet.getLastRow() - 1, 1).getDisplayValues();
+  var highestOrderId = 0;
+  ids.forEach(function (row) {
+    var id = Number(row[0]);
+    if (Number.isFinite(id) && id > highestOrderId) highestOrderId = Math.floor(id);
+  });
+  return highestOrderId + 1;
+}
+
+function doPost(e) {
+  try {
+    var adminResponse = handleAdminPost(e);
+    if (adminResponse) return adminResponse;
+
+    if ((e.parameter || {}).action) {
+      return jsonResponse_({ success: false, message: 'Unsupported admin action.' });
+    }
+
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Sheet1');
+    if (!sheet) return jsonResponse_({ success: false, message: 'Sheet1 was not found.' });
+
+    var lock = LockService.getScriptLock();
+    lock.waitLock(10000);
+    try {
+      var orderId = String(getNextOrderId_(sheet));
+      var noofModaks = e.parameter.noofModaks || '0';
+      var modakPrice = Number(noofModaks) * 35;
+
+      sheet.appendRow([
+        new Date(), orderId, noofModaks, modakPrice,
+        e.parameter.roomNo || '', e.parameter.towerName || '',
+        e.parameter.personName || '', e.parameter.contactNo || '',
+        e.parameter.emailId || '', 'Pending'
+      ]);
+
+      // Persist only after the row was successfully added.
+      PropertiesService.getScriptProperties().setProperty('lastOrderId', orderId);
+      return jsonResponse_({ success: true, orderId: orderId });
+    } finally {
+      lock.releaseLock();
+    }
+  } catch (error) {
+    return jsonResponse_({ success: false, message: String(error) });
+  }
 }
