@@ -139,7 +139,8 @@ document.getElementById('orderForm').addEventListener('submit', function(e) {
 function confirmOrder() {
     if (!pendingOrder) return;
 
-    const formData = new URLSearchParams(pendingOrder);
+    const submittedOrder = pendingOrder;
+    const formData = new URLSearchParams(submittedOrder);
     confirmationModal.style.display = 'none';
     loadingModal.style.display = 'flex';
     confirmOrderButton.disabled = true;
@@ -169,7 +170,7 @@ function confirmOrder() {
         document.getElementById('orderIdDisplay').textContent = 'Order ID: ' + data.orderId;
         const towerLabel = towerNameInput.options[towerNameInput.selectedIndex].textContent;
         document.getElementById('deliveryMessage').textContent =
-            'Order will be delivered from VAMA 402 to ' + towerLabel + ' ' + pendingOrder.roomNo + '.';
+            'Order will be delivered from VAMA 402 to ' + towerLabel + ' ' + submittedOrder.roomNo + '.';
         document.getElementById('successModal').style.display = 'flex';
         document.getElementById('orderForm').reset();
         modakPriceInput.value = 'Rs. 0';
