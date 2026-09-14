@@ -89,7 +89,9 @@ function getNextOrderId_(sheet) {
   if (sheet.getLastRow() < 2) return 1;
   var ids = sheet.getRange(2, 2, sheet.getLastRow() - 1, 1).getDisplayValues();
   for (var index = ids.length - 1; index >= 0; index--) {
-    var lastOrderId = Number(ids[index][0]);
+    var rawOrderId = String(ids[index][0]).trim();
+    if (!rawOrderId) continue;
+    var lastOrderId = Number(rawOrderId);
     if (Number.isFinite(lastOrderId) && lastOrderId >= 0) {
       return Math.floor(lastOrderId) + 1;
     }
