@@ -116,7 +116,8 @@ function openOrderModal(order) {
     const labels = {
         orderId: 'Order ID', noofModaks: 'No. of Modaks', modakPrice: 'Total Price',
         roomNo: 'Room No.', towerName: 'Tower Name', personName: 'Name',
-        contactNo: 'Contact No.', emailId: 'Email ID', timestamp: 'Order Time'
+        contactNo: 'Contact No.', emailId: 'Email ID',
+        expectedDateTime: 'Expected Date and Time', timestamp: 'Order Time'
     };
     orderPreview.innerHTML = Object.keys(labels).filter(function (key) {
         return order[key] !== undefined && order[key] !== '';

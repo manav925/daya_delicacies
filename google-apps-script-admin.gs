@@ -60,6 +60,7 @@ function handleAdminPost(e) {
     modakprice: ['modakprice', 'totalprice'], roomno: ['roomno'],
     towername: ['towername', 'tower'], personname: ['personname', 'name'],
     contactno: ['contactno', 'contactnumber'], emailid: ['emailid', 'email'],
+    expectedDateTime: ['expecteddatetime', 'expecteddateandtime', 'deliverydatetime'],
     timestamp: ['timestamp', 'ordertime'], paymentmode: ['paymentmode'],
     paymentstatus: ['paymentstatus']
   };
@@ -119,12 +120,15 @@ function doPost(e) {
       var orderId = String(getNextOrderId_(sheet));
       var noofModaks = e.parameter.noofModaks || '0';
       var modakPrice = Number(noofModaks) * 35;
+      if (!sheet.getRange(1, 11).getValue()) {
+        sheet.getRange(1, 11).setValue('Expected Date and Time');
+      }
 
       sheet.appendRow([
         new Date(), orderId, noofModaks, modakPrice,
         e.parameter.roomNo || '', e.parameter.towerName || '',
         e.parameter.personName || '', e.parameter.contactNo || '',
-        e.parameter.emailId || '', 'Pending'
+        e.parameter.emailId || '', 'Pending', e.parameter.expectedDateTime || ''
       ]);
 
       return jsonResponse_({ success: true, orderId: orderId });

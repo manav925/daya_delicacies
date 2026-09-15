@@ -4,6 +4,7 @@ const roomNoInput = document.getElementById('roomNo');
 const towerNameInput = document.getElementById('towerName');
 const modakInput = document.getElementById('noofModaks');
 const modakPriceInput = document.getElementById('modakPrice');
+const expectedDateTimeInput = document.getElementById('expectedDateTime');
 const contactNoInput = document.getElementById('contactNo');
 const emailInput = document.getElementById('emailId');
 const personNameInput = document.getElementById('personName');
@@ -114,6 +115,7 @@ document.getElementById('orderForm').addEventListener('submit', function(e) {
     pendingOrder = {
         noofModaks: modakInput.value,
         modakPrice: calculatedPrice,
+        expectedDateTime: expectedDateTimeInput.value,
         roomNo: roomNoInput.value,
         towerName: towerNameInput.value,
         personName: personNameInput.value,
@@ -124,6 +126,7 @@ document.getElementById('orderForm').addEventListener('submit', function(e) {
     orderPreview.innerHTML = Object.entries({
         'No. of Modaks': pendingOrder.noofModaks,
         'Total Price': pendingOrder.modakPrice,
+        'Expected Date and Time': pendingOrder.expectedDateTime,
         'Room No.': pendingOrder.roomNo,
         'Tower Name': pendingOrder.towerName,
         'Your Name': pendingOrder.personName,
